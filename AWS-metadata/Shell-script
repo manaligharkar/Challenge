@@ -10,4 +10,10 @@ Connect to your instance using its Public DNS:
 Example:
  ssh -i "ee.pem" ubuntu@ec2-54-196-172-7.compute-1.amazonaws.com
  ---------------------------------------------------------
+#!/bin/bash
+for input in "$@"
+do
 
+ssh -i "upp.pem" ubuntu@$input 'echo -e "\n{" >> $(curl http://169.254.169.254/latest/meta-data/public-hostname).txt && for line in $(curl http://169.254.169.254/latest/meta-data/); do echo -e "\n\"$line\": \"$(curl http://169.254.169.254/latest/meta-data/$line)\"," >>   $(curl http://169.254.169.254/latest/meta-data/public-hostname).txt ;done && echo -e "\n}" >> $(curl http://169.254.169.254/latest/meta-data/public-hostname).txt  && exit'
+scp -i "upp.pem" ubuntu@$input:/home/ubuntu/$input.txt .
+done
